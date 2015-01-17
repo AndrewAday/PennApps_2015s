@@ -75,9 +75,9 @@ public class OVRPlayerController : MonoBehaviour
 
 	private float MoveScale = 1.0f;
 	private Vector3 MoveThrottle = Vector3.zero;
-	private float FallSpeed = 0.0f;	
+	private float FallSpeed = 0.0f;
 	private OVRPose? InitialPose;
-	
+
 	/// <summary>
 	/// If true, each OVRPlayerController will use the player's physical height.
 	/// </summary>

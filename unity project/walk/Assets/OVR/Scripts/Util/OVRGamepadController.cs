@@ -148,10 +148,10 @@ public class OVRGamepadController : MonoBehaviour
 
 #if (!UNITY_ANDROID || UNITY_EDITOR)
 	private static bool GPC_Available = false;
-	
+
 	//-------------------------
 	// Public access to plugin functions
-	
+
 	/// <summary>
 	/// GPC_Initialize.
 	/// </summary>
@@ -200,7 +200,7 @@ public class OVRGamepadController : MonoBehaviour
 		return OVR_GamepadController_GetAxis((int)axis);
 #endif
 	}
-	
+
 	/// <summary>
 	/// Returns the current value of the given Axis.
 	/// </summary>
@@ -292,7 +292,7 @@ public class OVRGamepadController : MonoBehaviour
 	}
 
 	public const string LibOVR = "OculusPlugin";
-	
+
 	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
 	public static extern bool OVR_GamepadController_Initialize();
 	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]

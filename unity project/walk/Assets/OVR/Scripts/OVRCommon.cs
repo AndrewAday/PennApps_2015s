@@ -101,7 +101,7 @@ public static class OVRExtensions
 
 		return v;
 	}
-	
+
 	/// <summary>
 	/// Converts a plain C# Quatf to a Unity Quaternion.
 	/// </summary>
