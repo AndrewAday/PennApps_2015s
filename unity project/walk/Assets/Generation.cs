@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using SimpleJSON;
 
 public class Generation : MonoBehaviour {
 
@@ -20,6 +21,8 @@ public class Generation : MonoBehaviour {
 	public Transform dragon;
 	public Transform fishes;
 
+	private float colorlerp = 0;
+
 	private Transform player;
 	private float distancegoal = 0;
 	// public Material red;
@@ -27,9 +30,15 @@ public class Generation : MonoBehaviour {
 	// private float[] generated;
 	// private float[] prevgenerated;
 
+	private Color prevcolor;
+	private Color targetcolor;
+
+	public GUISkin skin;
+	// private int lastspeed;
+
 	int row = 0;
 
-	float steprate = 0;
+	float steprate = 10;
 
 
 	void Awake()
@@ -38,6 +47,13 @@ public class Generation : MonoBehaviour {
 	}
 
 	void Start()
+	{
+		// StartCoroutine(Datas());
+		InvokeRepeating("DatasCall", 0, 1F);
+		Debug.Log(steprate);
+	}
+
+	void DatasCall()
 	{
 		StartCoroutine(Datas());
 	}
@@ -53,6 +69,18 @@ public class Generation : MonoBehaviour {
 		yield return r.Send();
         Debug.Log(r.response.Text);
 
+        var parsed = JSON.Parse(r.response.Text);
+        steprate = parsed["bpm"].AsFloat;
+
+        player.GetComponent<MyGUI>().song = parsed["song"]["song_name"].Value;
+        player.GetComponent<MyGUI>().bpm = (int) Mathf.FloorToInt(parsed["bpm"].AsFloat);
+        // Debug.Load();
+
+
+        player.GetComponent<MoveScript>().speed = new Vector3(10,10,steprate/30.0f);
+        ChangeTint();
+        // steprate =
+
 	}
 
 	void OnPrivateChannel (Hashtable obj)
@@ -64,15 +92,54 @@ public class Generation : MonoBehaviour {
 
 	void ChangeTint()
 	{
-		RenderSettings.skybox.SetColor("_Tint", Color.red);
+		colorlerp = 0;
+		prevcolor = RenderSettings.skybox.GetColor("_Tint");
+		if(steprate < 80)
+		{
+			targetcolor = new Color(89/255.0f, 171/255.0f, 227/255.0f,0.3f);
+		}
+		else if(steprate < 120)
+		{
+			targetcolor = new Color(135/255.0f, 211/255.0f, 124/255.0f,0.3f);
+		}
+		else if(steprate < 160)
+		{
+			targetcolor = new Color(244/255.0f, 208/255.0f, 63/255.0f,0.3f);
+		}
+		else if(steprate < 200)
+		{
+			targetcolor = new Color(248/255.0f, 148/255.0f, 6/255.0f,0.3f);
+		}
+		else if(steprate < 240)
+		{
+			targetcolor = new Color(242/255.0f, 38/255.0f, 19/255.0f,0.3f);
+		}
+		else
+		{
+			targetcolor = new Color(0/255.0f, 0/255.0f, 0/255.0f,0.3f);
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
 
+		RenderSettings.skybox.SetColor("_Tint", Color.Lerp(prevcolor,targetcolor,colorlerp));
+
+		if(colorlerp<1)
+		{
+			colorlerp += Time.deltaTime;
+		}
+
+		if (Input.GetKeyDown("space"))
+		{
+            steprate += 10;
+            player.GetComponent<MoveScript>().speed = new Vector3(10,10,steprate/30.0f);
+            ChangeTint();
+		}
 
 
-		while(player.position.z + 20 > distancegoal)
+
+		while(player.position.z + 40 > distancegoal)
 		{
 			GenerateRow();
 			distancegoal += 0.25f;
@@ -150,7 +217,7 @@ public class Generation : MonoBehaviour {
 
 			// block.position = new Vector3(((i-20)/4.0f),height/4.0f,(row/4.0f));
 
-		if(Random.value < 0.02f)
+		if(Random.value < 0.02f && steprate > 100)
 		{
 			var thing = Instantiate(boat) as Transform;
 			thing.position = new Vector3(-7f + (Random.value * 5f),0.6f,row/4.0f)  + new Vector3(361,13f,0);
@@ -162,31 +229,31 @@ public class Generation : MonoBehaviour {
 			// thing.position = new Vector3(-2.75f + (Random.value * 0.75f),0.6f,row/4.0f);
 		}
 
-		if(Random.value < 0.02f)
+		if(Random.value < 0.02f && steprate > 100)
 		{
 			var thing = Instantiate(boat) as Transform;
 			thing.position = new Vector3(7 - (Random.value * 6f),0.6f,row/4.0f) + new Vector3(361,13f,0);
 		}
 
-		if(Random.value < 0.02f)
+		if(Random.value < 0.02f && steprate > 150)
 		{
-			var thing = Instantiate(giantboat) as Transform;
-			thing.position = new Vector3(4,3.5f,row/4.0f) + new Vector3(361,13f,0);
+			// var thing = Instantiate(giantboat) as Transform;
+			// thing.position = new Vector3(4,3.5f,row/4.0f) + new Vector3(361,13f,0);
 		}
 
-		if(Random.value < 0.02f)
+		if(Random.value < 0.005f && steprate > 200)
 		{
 			var thing = Instantiate(dragon) as Transform;
 			thing.position = new Vector3(4,3.5f,row/4.0f) + new Vector3(361,13f,0);
 		}
 
-		if(Random.value < 0.005f)
+		if(Random.value < 0.005f && steprate > 100)
 		{
 			var thing = Instantiate(fishes) as Transform;
 			thing.position = new Vector3(4,0.6f,row/4.0f) + new Vector3(361,13f,0);
 		}
 
-		if(Random.value < 0.005f)
+		if(Random.value < 0.005f && steprate > 100)
 		{
 			var thing = Instantiate(fishes) as Transform;
 			thing.position = new Vector3(-4,0.6f,row/4.0f) + new Vector3(361,13f,0);
@@ -197,20 +264,17 @@ public class Generation : MonoBehaviour {
 		{
 			var thing = Instantiate(column) as Transform;
 			thing.position = new Vector3(8.75f,1,row/4.0f) + new Vector3(361,13f,0);
+			thing.GetComponent<Animator>().speed = steprate/200.0f;
 		}
 		if((row % 8)==0)
 		{
 			var thing = Instantiate(column) as Transform;
 			thing.position = new Vector3(-8.75f,1,row/4.0f) + new Vector3(361,13f,0);
+			thing.GetComponent<Animator>().speed = steprate/200.0f;
 		}
 
 	}
 
-
-	void OnGUI()
-	{
-		GUI.Label(new Rect(10,10,100,35),"trolololol");
-	}
 
 	void GenerateMountains()
 	{
