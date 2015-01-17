@@ -13,16 +13,16 @@ Exit statuses
 */
 	
 if ($_SESSION['connection']) {	
-	if (isset($_POST['username']) && isset($_POST['password'])) {
+	if (isset($_POST['username'])) {
 
 		$username = $_POST['username'];
-		$password = $_POST['password'];
+
 		//check if user exists
 		$query = (array("username" => $username));
 		$result = $users->findOne($query);
 		if (!$result) {
 			//user doesn't exist, add to database
-			$account_info = $username . '|' . $password;
+			$account_info = $username;
 			$command = "php register_user_process.php '" .$account_info."' &";
 			$shell = shell_exec($command);
 			if (is_null($shell)) {
@@ -32,7 +32,6 @@ if ($_SESSION['connection']) {
 				$response = json_encode($response);
 				echo $response;	
 			}
-			
 		} else {
 			$response = array("status" => "already registered");
 			$response = json_encode($response);
@@ -41,7 +40,7 @@ if ($_SESSION['connection']) {
 
 	}
 } else {
-	echo 'error connecting to database'; 
+	exit('error connecting to database'); 
 }
 
 ?>

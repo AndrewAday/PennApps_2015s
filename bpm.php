@@ -1,36 +1,47 @@
 <?php
 header('Content-Type: application/json');
+
+
+require_once('db_connect.php');
+
+
 if($_SERVER['REQUEST_METHOD'] != 'POST') {
-	exit('error, pls post'); 
+	echo 'pls post'; 
+	exit;
 } else {
-	require_once('db_connect.php');
-	if (!isset($_POST['username']) {
-		exit('error, post username');
-	} else if ($_POST['data'] = 'retrieve') {
+	if (empty($_POST['username'])) {
+		echo 'error, post username'; 
+		exit;
+	} else if ($_POST['data'] == 'retrieve') {
 		$username = $_POST['username'];
 		$query = array("username" => $username);
 		$return = $users->findOne($query);
 		if(!$return) {
 			exit('user not in db');
 		} else {
-			echo $return['bpm'];
+			echo json_encode($return,true);
 			exit;
 		}	
-	} else if ($_POST['data'] = 'update' && isset($POST['bpm'])) {
+	} else if ($_POST['data'] == 'update' and isset($_POST['bpm'])) {
 		$username = $_POST['username'];
 		$query = array("username" => $username);
 		$return = $users->findOne($query);
 		if(!$return) {
-			exit('user not in db');
+			$response = array('message' => 'user not in db');
+			echo json_encode($response); 
 		} else {
 			$query = array('$set' => array("bpm" => $_POST['bpm']));
 			$users->update($return, $query);
-			exit;
+			$response = array('message' => 'good job bro, bpm updated');
+			echo json_encode($response); 
 		}
 	} else {
-		exit('whatchu doin');
+		$response = array('message' => 'watchu doin');
+		echo json_encode($response); 
+
 	}
 }
+
 
 
 /* TO RETRIEVE DATA
@@ -41,6 +52,8 @@ if($_SERVER['REQUEST_METHOD'] != 'POST') {
     data: update
     username: username
     bpm: bpm
+    
+*/
    
 
 

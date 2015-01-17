@@ -1,5 +1,7 @@
 {
 	"require": {
-    	"jwilsson/spotify-web-api-php": "0.6.*"
+    	"jwilsson/spotify-web-api-php": "0.6.*",
+		"pusher/pusher-php-server": "dev-master"
 	}
+	
 }

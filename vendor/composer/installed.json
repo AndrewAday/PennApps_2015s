@@ -45,5 +45,51 @@
         "keywords": [
             "spotify"
         ]
+    },
+    {
+        "name": "pusher/pusher-php-server",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/pusher/pusher-php-server.git",
+            "reference": "d5b4e8bec7fc5e53651c879495a74e96b1bc2cea"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/pusher/pusher-php-server/zipball/d5b4e8bec7fc5e53651c879495a74e96b1bc2cea",
+            "reference": "d5b4e8bec7fc5e53651c879495a74e96b1bc2cea",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2014-06-11 19:32:01",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "lib/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Library for interacting with the Pusher REST API",
+        "homepage": "https://github.com/pusher/pusher-php-server",
+        "keywords": [
+            "events",
+            "php-pusher-server",
+            "publish",
+            "pusher",
+            "realtime",
+            "rest",
+            "trigger"
+        ]
     }
 ]

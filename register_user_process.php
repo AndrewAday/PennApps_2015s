@@ -1,14 +1,13 @@
 <?php 
 
 if (isset($argv[1])) {
-	require_once('db_connect');
+	require_once('db_connect.php');
 	
-	$account_info = explode("|", $argv[1]);
-	$username = $account_info[0]; 
-	$password = $account_info[1];
+
+	$username = $argv[1]; 
 	
 	if ($_SESSION['connection']) {
-		$query = array("username" => $username, "password" => $password); 
+		$query = array("username" => $username); 
 		$users->insert($query);
 		exit('successfully added user');
 	} else {
