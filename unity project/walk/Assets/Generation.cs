@@ -21,6 +21,9 @@ public class Generation : MonoBehaviour {
 	public Transform dragon;
 	public Transform fishes;
 
+	public Transform lefteye;
+	public Transform righteye;
+
 	private float colorlerp = 0;
 
 	private Transform player;
@@ -70,7 +73,8 @@ public class Generation : MonoBehaviour {
         Debug.Log(r.response.Text);
 
         var parsed = JSON.Parse(r.response.Text);
-        steprate = parsed["bpm"].AsFloat;
+        steprate = parsed["bpm"].AsFloat * 1.2f;
+        // steprate = 151;
 
         player.GetComponent<MyGUI>().song = parsed["song"]["song_name"].Value;
         player.GetComponent<MyGUI>().bpm = (int) Mathf.FloorToInt(parsed["bpm"].AsFloat);
@@ -78,6 +82,19 @@ public class Generation : MonoBehaviour {
 
 
         player.GetComponent<MoveScript>().speed = new Vector3(10,10,steprate/30.0f);
+
+        if(steprate > 120)
+        {
+        	lefteye.GetComponent<Camera>().fieldOfView = 100 + ((steprate-100)/3);
+        	righteye.GetComponent<Camera>().fieldOfView = 100 + ((steprate-100)/3);
+        }
+        else
+        {
+        	lefteye.GetComponent<Camera>().fieldOfView = 100;
+        	righteye.GetComponent<Camera>().fieldOfView = 100;
+        }
+
+
         ChangeTint();
         // steprate =
 
@@ -116,7 +133,7 @@ public class Generation : MonoBehaviour {
 		}
 		else
 		{
-			targetcolor = new Color(0/255.0f, 0/255.0f, 0/255.0f,0.3f);
+			targetcolor = new Color(155/255.0f, 155/255.0f, 155/255.0f,0.3f);
 		}
 	}
 
@@ -133,7 +150,7 @@ public class Generation : MonoBehaviour {
 		if (Input.GetKeyDown("space"))
 		{
             steprate += 10;
-            player.GetComponent<MoveScript>().speed = new Vector3(10,10,steprate/30.0f);
+            player.GetComponent<MoveScript>().speed = new Vector3(10,10,steprate/20.0f);
             ChangeTint();
 		}
 
@@ -237,8 +254,8 @@ public class Generation : MonoBehaviour {
 
 		if(Random.value < 0.02f && steprate > 150)
 		{
-			// var thing = Instantiate(giantboat) as Transform;
-			// thing.position = new Vector3(4,3.5f,row/4.0f) + new Vector3(361,13f,0);
+			var thing = Instantiate(giantboat) as Transform;
+			thing.position = new Vector3(4,0.9f,row/4.0f) + new Vector3(361,13f,0);
 		}
 
 		if(Random.value < 0.005f && steprate > 200)
@@ -264,13 +281,23 @@ public class Generation : MonoBehaviour {
 		{
 			var thing = Instantiate(column) as Transform;
 			thing.position = new Vector3(8.75f,1,row/4.0f) + new Vector3(361,13f,0);
-			thing.GetComponent<Animator>().speed = steprate/200.0f;
+			thing.GetComponent<ColumnScript>().volume = 0.01f + (steprate-120)/10000.0f;
+
+			if(steprate < 120)
+			{
+				thing.GetComponent<ColumnScript>().volume = 0.01f;
+			}
 		}
 		if((row % 8)==0)
 		{
 			var thing = Instantiate(column) as Transform;
 			thing.position = new Vector3(-8.75f,1,row/4.0f) + new Vector3(361,13f,0);
-			thing.GetComponent<Animator>().speed = steprate/200.0f;
+			thing.GetComponent<ColumnScript>().volume = 0.01f + (steprate-120)/10000.0f;
+
+			if(steprate < 120)
+			{
+				thing.GetComponent<ColumnScript>().volume = 0.01f;
+			}
 		}
 
 	}
