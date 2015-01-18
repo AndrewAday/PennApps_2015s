@@ -56,8 +56,8 @@ if ($bpm == 0) {
 	$songApi = $echonest->getSongApi();
 	
 	//$results = $echonest->getArtistApi()->search(array('name' => 'Radiohead'));
-	$bpm_max = $bpm + 10;
-	$bpm_min = $bpm - 10;
+	$bpm_max = $bpm + 20;
+	$bpm_min = $bpm - 20;
 	$query = "http://developer.echonest.com/api/v4/song/search?api_key=PCDOMTD1QSYCNESM5&format=json&max_tempo=$bpm_max&min_tempo=$bpm_min&sort=song_hotttnesss-desc&bucket=audio_summary&song_type=live:false&results=8";
 
 	
@@ -82,6 +82,7 @@ $results = $songApi->search(array('max_tempo' => $bpm + 12, 'min_tempo' => $bpm 
 		$temp['title'] = $song['title'];
 		$temp['artist_name'] = $song['artist_name'];
 		$temp['echo_nest_id'] = $song['id']; 
+		$temp['duration'] = $song['audio_summary']['duration']; 
 		array_push($the_money, $temp);
 	}
 	$the_money_2 = array(); 
@@ -92,6 +93,7 @@ $results = $songApi->search(array('max_tempo' => $bpm + 12, 'min_tempo' => $bpm 
 		if (isset($return['tracks']['items'][0]['id'])) {
 			$temp['id'] = $return['tracks']['items'][0]['id'];
 			$temp['echo_nest'] = $song['echo_nest_id'];
+			$temp['duration'] = $song['duration'];
 			array_push($the_money_2, $temp);
 		} else {
 			;

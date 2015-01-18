@@ -79,7 +79,8 @@ $results = file_get_contents('http://developer.echonest.com/api/v4/song/search?a
 		$temp = array();
 		$temp['title'] = $song['title'];
 		$temp['artist_name'] = $song['artist_name'];
-		$temp['echo_nest_id'] = $song['id']; 
+		$temp['echo_nest_id'] = $song['id'];
+		$temp['duration'] = $song['audio_summary']['duration']; 
 		array_push($the_money, $temp);
 	}
 			echo '<br/>';
@@ -105,6 +106,7 @@ $results = file_get_contents('http://developer.echonest.com/api/v4/song/search?a
 		if (isset($return['tracks']['items'][0]['id'])) {
 			$temp['id'] = $return['tracks']['items'][0]['id'];
 			$temp['echo_nest'] = $song['echo_nest_id'];
+			$temp['duration'] = $song['duration'];
 			array_push($the_money_2, $temp);
 		} else {
 			;
